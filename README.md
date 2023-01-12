@@ -16,7 +16,7 @@ This script **expects reports to be incremental updates**, so if a report is sch
 
 ## Setup
 
-If this is being used by a team for shared data sources, consider configuring it on a shard Google account, for maintainability.
+If this is being used by a team for shared data sources, consider configuring it on a shared Google account, for maintainability.
 
 1. Create an Alma Analytics scheduled report to be sent as a CSV file.
    * Reports should only include incremental updates to the overall data set. Any data repeated on multiple reports will be duplicated in the Sheet.
