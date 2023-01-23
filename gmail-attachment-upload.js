@@ -55,11 +55,13 @@ function gmailUploadAndUpdate() {
 
       if (data[0][0].trim() == 'The query resulted in no rows') return;
 
-      if (!newSheet) {
+      if (!newSheet && !file.getName().includes('[CSV-UPLOAD-FULL]')) {
+        // Existing incremental upload
         data = data.slice(1);
         targetSheet.insertRows(2, data.length);
         targetSheet.getRange(2, 1, data.length, data[0].length).setValues(data);
       } else {
+        targetSheet.clear();
         targetSheet.getRange(1, 1, data.length, data[0].length).setValues(data);
       }
     }
