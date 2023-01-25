@@ -51,7 +51,18 @@ function gmailUploadAndUpdate() {
 
       // Parse CSV into Sheet
       const file = folder.getFilesByName(attachment.getName()).next();
-      let data = Utilities.parseCsv(file.getBlob().getDataAsString());
+      let blob;
+
+      if (file.getMimeType() == 'application/zip') {
+        blob = Utilities.unzip(file.getBlob())[0];
+      } else if (file.getMimeType() == 'text/csv') {
+        blob = file.getBlob();
+      } else {
+        console.log('Invalid MIME type');
+        return;
+      }
+
+      let data = Utilities.parseCsv(blob.getDataAsString());
 
       if (data[0][0].trim() == 'The query resulted in no rows') return;
 
