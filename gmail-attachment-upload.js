@@ -55,11 +55,8 @@ function gmailUploadAndUpdate() {
 
       if (file.getMimeType() == 'application/zip') {
         blob = Utilities.unzip(file.getBlob())[0];
-      } else if (file.getMimeType() == 'text/csv') {
-        blob = file.getBlob();
       } else {
-        console.log('Invalid MIME type');
-        return;
+        blob = file.getBlob();
       }
 
       let data = Utilities.parseCsv(blob.getDataAsString());
