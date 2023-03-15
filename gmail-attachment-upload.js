@@ -24,10 +24,15 @@ function gmailUploadAndUpdate() {
 
   function uploadLabeledAttachments(folder, attachments) {
     for (const attachment of attachments) {
-      const existingFile = folder.getFilesByName(attachment.getName());
+      const fileName = attachment.getName().slice(0, attachment.getName().lastIndexOf('.'));
+      const fileTypes = ['.csv', '.zip'];
 
-      while (existingFile.hasNext()) {
-        existingFile.next().setTrashed(true);
+      for (const fileType of fileTypes) {
+        const existingFile = folder.getFilesByName(fileName + fileType);
+
+        while (existingFile.hasNext()) {
+          existingFile.next().setTrashed(true);
+        }
       }
   
       folder.createFile(attachment.copyBlob()).setName(attachment.getName());
@@ -37,7 +42,8 @@ function gmailUploadAndUpdate() {
   function createOrUpdateSheet(folder, attachments) {
     for (const attachment of attachments) {
       // Create or locate existing Sheet
-      const sheetName = `${attachment.getName()} [SHEET]`;
+      const fileName = attachment.getName().slice(0, attachment.getName().lastIndexOf('.'));
+      const sheetName = `${fileName} [SHEET]`;
       const matchingSheet = folder.getFilesByName(sheetName);
       let newSheet = null;
 

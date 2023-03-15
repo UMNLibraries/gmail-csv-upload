@@ -12,7 +12,7 @@ This Google Apps script:
 
 This enables an automatic process for ingesting Alma Analytics scheduled reports into Tableau workbooks, without any ongoing manual actions or processes to run on a local machine. The Google Sheet can also be shared directly with others.
 
-This script allows for **either full or incremental updates**, via tags in the filenames, as explained below.
+This script allows for **either full or incremental updates**, via tags in the filenames, as explained below. It also handles CSV files that have been compressed into a zip file, as Alma Analytics does when attachments exceed 2MB.
 
 ## Setup
 
