@@ -30,7 +30,7 @@ If this is being used by a team for shared data sources, consider configuring it
    1. Set filter actions: `Skip Inbox` and `Apply label <name of label>`
 1. Create a Drive folder for uploads, and copy its ID from the folder’s URL (i.e., the whole string after `folders/`). Use a specific folder for this (not just My Drive), so that the script isn’t manipulating any other files.
 1. Create new [Google Script](https://script.google.com) project from the same Google account as the Gmail filter and Drive folder.
-   1. Copy/paste [gmail-attachment-upload.js](/gmail-attachment-upload.js) into your new project.
+   1. Copy/paste [update-sheet.js](/update-sheet.js) into your new project.
    1. Paste folder ID into empty string in `const folder =` line.
    1. Paste Gmail label name into empty string in `const attachments =` line.
    1. Save your project.
