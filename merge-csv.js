@@ -51,6 +51,14 @@ function gmailMergeAndUpload() {
         existingFile.next().setTrashed(true);
       }
 
+      // Sort attachments
+      const digitsRegex = /(\d+)\]\.(?:csv|zip)$/;
+      group.sort((a, b) => {
+        a = a.getName().match(digitsRegex)[1];
+        b = b.getName().match(digitsRegex)[1];
+        return a - b;
+      });
+
       let csvString = '';
 
       for (let attachment of group) {
