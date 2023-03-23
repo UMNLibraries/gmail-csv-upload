@@ -1,4 +1,4 @@
-// Add datestamp? Order by tag number?
+// Order by tag number?
 function gmailMergeAndUpload() {
   // Paste Folder ID below
   const folder = DriveApp.getFolderById('');
@@ -71,7 +71,9 @@ function gmailMergeAndUpload() {
         }
       }
 
-      let blob = Utilities.newBlob(csvString, 'text/csv', `${groupFileName}.csv`);
+      let blob = Utilities.newBlob(csvString, 'text/csv');
+      const today = new Date().toISOString().split("T")[0];
+      blob.setName(`${groupFileName} ${today}.csv`);
       blob = Utilities.zip([blob]).setName(`${groupFileName}.zip`);
       folder.createFile(blob);
     }
