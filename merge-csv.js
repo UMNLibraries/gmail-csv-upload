@@ -1,3 +1,4 @@
+// Add datestamp? Order by tag number?
 function gmailMergeAndUpload() {
   // Paste Folder ID below
   const folder = DriveApp.getFolderById('');
@@ -44,8 +45,8 @@ function gmailMergeAndUpload() {
     for (const group of attachments) {
       // Delete previous merged CSV
       const groupFileName = group[0].getName()
-        .slice(0, group[0].getName().lastIndexOf('[')).trim() + '.csv';
-      const existingFile = folder.getFilesByName(groupFileName);
+        .slice(0, group[0].getName().lastIndexOf('[')).trim();
+      const existingFile = folder.getFilesByName(`${groupFileName}.zip`);
       while (existingFile.hasNext()) {
         existingFile.next().setTrashed(true);
       }
@@ -53,7 +54,6 @@ function gmailMergeAndUpload() {
       let csvString = '';
 
       for (let attachment of group) {
-        console.log(attachment.getContentType());
         // Unzip if needed and convert to string
         if (attachment.getContentType() === 'application/zip') {
           attachment = Utilities.unzip(attachment)[0];
@@ -61,19 +61,19 @@ function gmailMergeAndUpload() {
         let string = attachment.getDataAsString();
 
         if (string.includes('The query resulted in no rows')) {
-          console.log('no data');
           continue;
         }
 
         if (csvString.length === 0) {
           csvString += string;
         } else {
-          csvString += string.slice(string.indexOf('\n') + 1);
+          csvString += string.slice(string.indexOf('\n'));
         }
       }
 
-      const blob = Utilities.newBlob(csvString, 'text/csv');
-      folder.createFile(blob.setName(groupFileName));
+      let blob = Utilities.newBlob(csvString, 'text/csv', `${groupFileName}.csv`);
+      blob = Utilities.zip([blob]).setName(`${groupFileName}.zip`);
+      folder.createFile(blob);
     }
   }
 
