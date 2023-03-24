@@ -1,9 +1,10 @@
-// Order by tag number?
 function gmailMergeAndUpload() {
   // Paste Folder ID below
   const folder = DriveApp.getFolderById('');
   // Paste label name below
   const attachments = getLabeledAttachmentsGrouped('');
+
+  const files = [];
 
   function getLabeledAttachmentsGrouped(labelName) {
     const label = GmailApp.getUserLabelByName(labelName);
@@ -83,9 +84,14 @@ function gmailMergeAndUpload() {
       const today = new Date().toISOString().split("T")[0];
       blob.setName(`${groupFileName} ${today}.csv`);
       blob = Utilities.zip([blob]).setName(`${groupFileName}.zip`);
-      folder.createFile(blob);
+      const file = folder.createFile(blob);
+
+      files.push(file);
     }
   }
 
+  // Returns array of `File`s
   uploadMergedAttachments(folder, attachments);
+  console.log(files);
+  return files;
 }
