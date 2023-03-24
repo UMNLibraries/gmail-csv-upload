@@ -1,8 +1,8 @@
 function gmailMergeAndUpload() {
   // Paste Folder ID below
-  const folder = DriveApp.getFolderById('');
+  const folder = DriveApp.getFolderById('16BDGIA4WviBYfqsPYaeooWnmzVJqpf10');
   // Paste label name below
-  const attachments = getLabeledAttachmentsGrouped('');
+  const attachments = getLabeledAttachmentsGrouped('Automatic merge');
 
   const files = [];
 
@@ -90,8 +90,38 @@ function gmailMergeAndUpload() {
     }
   }
 
-  // Returns array of `File`s
   uploadMergedAttachments(folder, attachments);
-  console.log(files);
+  parseFileRecipients(files);
+
+  // Returns array of `File`s
   return files;
+}
+
+function parseFileRecipients(files) {
+  const recipients = {
+    'All Unlimited Access eBooks list for Bookstore.zip': ['engel653@umn.edu'],
+    'Unlimited eBooks.zip': ['engel653@umn.edu'],
+  };
+
+  for (const file of files) {
+    const emails = recipients[file.getName()];
+    if (emails) {
+      for (const email of emails) shareAndNotifyRecipient(file, email);
+    }
+  }
+}
+
+function shareAndNotifyRecipient(file, email) {
+  file.addViewer(email);
+
+  var body = '<p>The following report is ready for download in Google Drive:</p>';
+  body += `<p><a href="${file.getUrl()}">${file.getName()}</a></p>`;
+  body += '<p>If you have questions about this email, please contact <a href="mailto:engel653@umn.edu">engel653@umn.edu</a>.</p>'
+
+  MailApp.sendEmail({
+    to: email,
+    subject: `Report ready: ${file.getName()}`,
+    htmlBody: body
+  });
+  console.log(`emailed ${email}`);
 }
