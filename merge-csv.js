@@ -1,8 +1,8 @@
 function gmailMergeAndUpload() {
   // Paste Folder ID below
-  const folder = DriveApp.getFolderById('16BDGIA4WviBYfqsPYaeooWnmzVJqpf10');
+  const folder = DriveApp.getFolderById('');
   // Paste label name below
-  const attachments = getLabeledAttachmentsGrouped('Automatic merge');
+  const attachments = getLabeledAttachmentsGrouped('');
 
   const files = [];
 
@@ -99,7 +99,6 @@ function gmailMergeAndUpload() {
 
 function parseFileRecipients(files) {
   const recipients = {
-    'All Unlimited Access eBooks list for Bookstore.zip': ['engel653@umn.edu'],
     'Unlimited eBooks.zip': ['engel653@umn.edu'],
   };
 
@@ -123,5 +122,5 @@ function shareAndNotifyRecipient(file, email) {
     subject: `Report ready: ${file.getName()}`,
     htmlBody: body
   });
-  console.log(`emailed ${email}`);
+  console.log(`Emailed ${file.getName()} to ${email}`);
 }
