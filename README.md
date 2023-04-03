@@ -19,14 +19,14 @@ This script allows for **either full or incremental updates**, via tags in the f
 If this is being used by a team for shared data sources, consider configuring it on a shared Google account, for maintainability.
 
 1. Create an Alma Analytics scheduled report to be sent as a CSV file.
-   * If the data reported is incremental, include "`[CSV-UPLOAD]`" in the report name.
+   * If the data reported is incremental, include "`[CSV-UPLOAD-INC]`" in the report name.
      * Incremental reports should only include the data from the time period between scheduled reports. Any data repeated on multiple reports will be duplicated in the Sheet.
      * A daily incremental report, for example, can be generated with an SQL filter like `<some date dimension> = TimeStampAdd(SQL_TSI_DAY,-1,Current_Date)`.
    * If the data is to be fully replaced with each report, include "`[CSV-UPLOAD-FULL]`" in the report name.
 1. Create a label in Gmail, which will be used to mark specific emails with attachments for upload.
 1. Create a filter in Gmail to assign the label to the relevant report emails and remove them from the inbox. **You should not open or “read” these emails, as the script searches for unread email**.
    1. To capture all automated Alma report emails, use: `from:(libnotic@umn.edu) "Attached please find the following Analytics report to which you are subscribed"`.
-   1. To filter for our filename tags, add to the above: `subject:("[CSV-UPLOAD")`.
+   1. To filter for our filename tags, add to the above: `subject:({"[CSV-UPLOAD-INC]" "[CSV-UPLOAD-FULL]"})`.
    1. Set filter actions: `Skip Inbox` and `Apply label <name of label>`
 1. Create a Drive folder for uploads, and copy its ID from the folder’s URL (i.e., the whole string after `folders/`). Use a specific folder for this (not just My Drive), so that the script isn’t manipulating any other files.
 1. Create new [Google Script](https://script.google.com) project from the same Google account as the Gmail filter and Drive folder.
