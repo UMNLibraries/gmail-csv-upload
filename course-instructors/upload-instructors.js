@@ -1,8 +1,8 @@
 function gmailUploadAndUpdate() {
   // Paste Folder ID below
-  const folder = DriveApp.getFolderById('');
+  const folder = DriveApp.getFolderById('1LIhtxoxAud93eJL8olcIToDCZs_rLlVF');
   // Paste label name below
-  const attachments = getLabeledAttachments('Course instructors');
+  const attachments = getLabeledAttachments('Automatic merge');
 
   function getLabeledAttachments(labelName) {
     const label = GmailApp.getUserLabelByName(labelName);
