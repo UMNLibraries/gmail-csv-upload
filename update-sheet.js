@@ -50,6 +50,8 @@ function gmailUploadAndUpdate() {
       if (!matchingSheet.hasNext()) {
         newSheet = SpreadsheetApp.create(sheetName);
         DriveApp.getFileById(newSheet.getId()).moveTo(folder);
+        newSheet.getActiveSheet().deleteColumns(1, 25);
+        newSheet.getActiveSheet().deleteRows(1, 999);
       }
 
       let targetSheet = newSheet || SpreadsheetApp.open(matchingSheet.next());
