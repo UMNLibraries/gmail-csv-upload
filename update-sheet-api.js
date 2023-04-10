@@ -71,7 +71,7 @@ function gmailUploadAndUpdate() {
 
       let data = Utilities.parseCsv(blob.getDataAsString());
 
-      if (data[0][0].trim() == 'The query resulted in no rows') return;
+      if (data[0][0].trim() == 'The query resulted in no rows') continue;
 
       if (!newSheet && !file.getName().includes('[CSV-UPLOAD-FULL]')) {
         // Existing incremental upload
