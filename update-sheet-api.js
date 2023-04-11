@@ -1,5 +1,4 @@
 // https://developers.google.com/apps-script/advanced/sheets
-// https://stackoverflow.com/questions/64977032/google-apps-script-setvalues-issue-timing-out-intermittently
 function gmailUploadAndUpdate() {
   // Paste Folder ID below
   const folder = DriveApp.getFolderById('');
@@ -82,23 +81,31 @@ function gmailUploadAndUpdate() {
         targetSheet.clear();
         SpreadsheetApp.flush();
         // Use Sheets API batchUpdate for speed
-        const range = targetSheet.getRange(1, 1, data.length, data[0].length)
+        for (let i = 0; i <= data.length; i += 100000) {
+          const dataSlice = data.slice(i, i + 100000);
+
+          while (targetSheet.getMaxRows() < i + dataSlice.length) {
+            targetSheet.insertRowsAfter(targetSheet.getMaxRows(), 10000);
+          }
+
+          const range = targetSheet.getRange(i + 1, 1, dataSlice.length, dataSlice[0].length)
           .getA1Notation();
-        const request = {
-          'valueInputOption': 'RAW',
-          'data': [
-            {
-              'range': `${targetSheet.getSheetName()}!${range}`,
-              'majorDimension': 'ROWS',
-              'values': data,
-            }
-          ]
-        };
-        try {
-          const response = Sheets.Spreadsheets.Values.batchUpdate(request, targetSpreadsheet.getId());
-          if (response) console.log(response);
-        } catch (error) {
-          console.log(error.message);
+          const request = {
+            'valueInputOption': 'RAW',
+            'data': [
+              {
+                'range': `${targetSheet.getSheetName()}!${range}`,
+                'majorDimension': 'ROWS',
+                'values': dataSlice,
+              }
+            ]
+          };
+          try {
+            const response = Sheets.Spreadsheets.Values.batchUpdate(request, targetSpreadsheet.getId());
+            if (response) console.log(response);
+          } catch (error) {
+            console.error(error.message);
+          }
         }
       }
     }
