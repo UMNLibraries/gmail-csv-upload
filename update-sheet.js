@@ -78,6 +78,7 @@ function gmailUploadAndUpdate() {
         targetSheet.getRange(2, 1, data.length, data[0].length).setValues(data);
       } else {
         targetSheet.clear();
+        SpreadsheetApp.flush();
         targetSheet.getRange(1, 1, data.length, data[0].length).setValues(data);
       }
     }

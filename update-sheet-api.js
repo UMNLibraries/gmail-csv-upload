@@ -80,6 +80,7 @@ function gmailUploadAndUpdate() {
         targetSheet.getRange(2, 1, data.length, data[0].length).setValues(data);
       } else {
         targetSheet.clear();
+        SpreadsheetApp.flush();
         // Use Sheets API batchUpdate for speed
         const range = targetSheet.getRange(1, 1, data.length, data[0].length)
           .getA1Notation();
