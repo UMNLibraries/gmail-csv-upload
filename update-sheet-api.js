@@ -1,4 +1,3 @@
-// https://developers.google.com/apps-script/advanced/sheets
 function gmailUploadAndUpdate() {
   // Paste Folder ID below
   const folder = DriveApp.getFolderById('');
@@ -48,18 +47,24 @@ function gmailUploadAndUpdate() {
       const matchingSheet = folder.getFilesByName(sheetName);
       let newSheet = null;
 
-      if (!matchingSheet.hasNext()) {
+      const file = folder.getFilesByName(attachment.getName()).next();
+
+      if (!matchingSheet.hasNext() && !file.getName().includes('[CSV-UPLOAD-UNZIP]')) {
         newSheet = SpreadsheetApp.create(sheetName);
         DriveApp.getFileById(newSheet.getId()).moveTo(folder);
         newSheet.getActiveSheet().deleteColumns(1, 25);
         newSheet.getActiveSheet().deleteRows(1, 999);
       }
 
-      const targetSpreadsheet = newSheet || SpreadsheetApp.open(matchingSheet.next());
-      const targetSheet = targetSpreadsheet.getActiveSheet();
+      let targetSpreadsheet;
+      let targetSheet;
 
-      // Parse CSV into Sheet
-      const file = folder.getFilesByName(attachment.getName()).next();
+      if (!file.getName().includes('[CSV-UPLOAD-UNZIP]')) {
+        targetSpreadsheet = newSheet || SpreadsheetApp.open(matchingSheet.next());
+        targetSheet = targetSpreadsheet.getActiveSheet();
+      }
+
+      // Parse CSV into Sheet, if applicable
       let blob;
 
       if (file.getMimeType() == 'application/zip') {
@@ -72,15 +77,23 @@ function gmailUploadAndUpdate() {
 
       if (data[0][0].trim() == 'The query resulted in no rows') continue;
 
-      if (!newSheet && !file.getName().includes('[CSV-UPLOAD-FULL]')) {
+      if (!newSheet && file.getName().includes('[CSV-UPLOAD-INC]')) {
         // Existing incremental upload
         data = data.slice(1);
         targetSheet.insertRows(2, data.length);
         targetSheet.getRange(2, 1, data.length, data[0].length).setValues(data);
+      } else if (file.getName().includes('[CSV-UPLOAD-UNZIP]')) {
+        if (file.getMimeType() == 'application/zip') {
+          folder.createFile(blob).setName(blob.getName());
+        } else {
+          continue;
+        }
       } else {
+        // New incremental and all full uploads
         targetSheet.clear();
         SpreadsheetApp.flush();
         // Use Sheets API batchUpdate for speed
+        // https://developers.google.com/apps-script/advanced/sheets
         for (let i = 0; i <= data.length; i += 100000) {
           const dataSlice = data.slice(i, i + 100000);
 
