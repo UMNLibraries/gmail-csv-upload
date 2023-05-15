@@ -52,10 +52,8 @@ function gmailUploadAndUpdate() {
       const file = folder.getFilesByName(attachment.getName()).next();
 
       if (!matchingSheet.hasNext() && !file.getName().includes('[CSV-UPLOAD-UNZIP]')) {
-        newSheet = SpreadsheetApp.create(sheetName);
+        newSheet = SpreadsheetApp.create(sheetName, 1, 1);
         DriveApp.getFileById(newSheet.getId()).moveTo(folder);
-        newSheet.getActiveSheet().deleteColumns(1, 25);
-        newSheet.getActiveSheet().deleteRows(1, 999);
       }
 
       let targetSpreadsheet;
