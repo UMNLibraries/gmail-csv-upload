@@ -67,8 +67,8 @@ function gmailUploadAndUpdate() {
       // Parse CSV into Sheet, if applicable
       let blob;
 
-      if (file.getMimeType() == 'application/zip') {
-        blob = Utilities.unzip(file.getBlob())[0];
+      if (file.getMimeType().includes('zip')) {
+        blob = Utilities.unzip(file.getBlob().setContentTypeFromExtension())[0];
       } else {
         blob = file.getBlob();
       }
@@ -83,7 +83,7 @@ function gmailUploadAndUpdate() {
         targetSheet.insertRows(2, data.length);
         targetSheet.getRange(2, 1, data.length, data[0].length).setValues(data);
       } else if (file.getName().includes('[CSV-UPLOAD-UNZIP]')) {
-        if (file.getMimeType() == 'application/zip') {
+        if (file.getMimeType().includes('zip')) {
           folder.createFile(blob).setName(blob.getName());
         } else {
           continue;
