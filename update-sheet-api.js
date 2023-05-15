@@ -18,7 +18,8 @@ function gmailUploadAndUpdate() {
       attachments.push(attachment);
       thread.markRead();
     }
-  
+    
+    console.log(`Retrieved attachments: ${attachments.map(a => a.getName())}`);
     return attachments;
   }
 
@@ -36,6 +37,7 @@ function gmailUploadAndUpdate() {
       }
   
       folder.createFile(attachment.copyBlob()).setName(attachment.getName());
+      console.log(`Uploaded: ${attachment.getName()}`);
     }
   }
 
@@ -75,16 +77,21 @@ function gmailUploadAndUpdate() {
 
       let data = Utilities.parseCsv(blob.getDataAsString());
 
-      if (data[0][0].trim() == 'The query resulted in no rows') continue;
+      if (data[0][0].trim() == 'The query resulted in no rows') {
+        console.log(`Empty report: ${blob.getName()}`);
+        continue;
+      }
 
       if (!newSheet && file.getName().includes('[CSV-UPLOAD-INC]')) {
         // Existing incremental upload
         data = data.slice(1);
         targetSheet.insertRows(2, data.length);
         targetSheet.getRange(2, 1, data.length, data[0].length).setValues(data);
+        console.log(`Incremental update: ${targetSpreadsheet.getName()}`);
       } else if (file.getName().includes('[CSV-UPLOAD-UNZIP]')) {
         if (file.getMimeType().includes('zip')) {
           folder.createFile(blob).setName(blob.getName());
+          console.log(`Upload unzipped: ${blob.getName()}`);
         } else {
           continue;
         }
@@ -94,6 +101,7 @@ function gmailUploadAndUpdate() {
         SpreadsheetApp.flush();
         // Use Sheets API batchUpdate for speed
         // https://developers.google.com/apps-script/advanced/sheets
+        console.log(`API batchUpdate begin: ${targetSpreadsheet.getName()}`);
         for (let i = 0; i <= data.length; i += 100000) {
           const dataSlice = data.slice(i, i + 100000);
 
@@ -120,6 +128,7 @@ function gmailUploadAndUpdate() {
             console.error(error.message);
           }
         }
+        console.log(`API batchUpdate end: ${targetSpreadsheet.getName()}`);
       }
     }
   }
