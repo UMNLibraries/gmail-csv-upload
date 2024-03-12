@@ -44,7 +44,13 @@ function gmailUploadAndUpdate() {
   function createOrUpdateSheet(folder, attachments) {
     for (const attachment of attachments) {
       // Create or locate existing Sheet
-      const fileName = attachment.getName().slice(0, attachment.getName().lastIndexOf('.'));
+      let fileName = attachment.getName().slice(0, attachment.getName().lastIndexOf('.'));
+
+      // Truncate fileName for HSL Gate Count feed from Sensource
+      if (fileName.includes('HSL Gate Count data')) {
+        fileName = fileName.substring(fileName.indexOf('HSL'), fileName.indexOf(']') + 1);
+      }
+
       const sheetName = `${fileName} [SHEET]`;
       const matchingSheet = folder.getFilesByName(sheetName);
       let newSheet = null;
