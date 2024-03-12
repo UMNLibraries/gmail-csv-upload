@@ -31,6 +31,8 @@ If this script is being used by a team for shared data sources, consider configu
 
 ### Main upload script
 
+This script uses the Google Sheets [Advanced Google service](https://developers.google.com/apps-script/guides/services/advanced). This must be enabled for the script to run, as described below.
+
 1. Create an Alma Analytics (or other platform) scheduled report to be sent as a CSV file.
    * If the data reported is for an incremental Google Sheet upload, include "`[CSV-UPLOAD-INC]`" in the report name.
      * Incremental reports should only include the data from the time period between scheduled reports. Any data repeated on multiple reports will be duplicated in the Sheet.
@@ -49,7 +51,9 @@ If this script is being used by a team for shared data sources, consider configu
    2. Paste folder ID into empty string in `const folder =` line.
    3. Paste Gmail label name into empty string in `const attachments =` line.
    4. Save your project.
-6. Enable a timed trigger to schedule executions of the script.
+6. To the left of the code, click the "+" next to "Services."
+   1. Select "Google Sheets API," and leave the default identifier of "`Sheets`."
+7. Enable a timed trigger to schedule executions of the script.
    1. Click on "Triggers" > "+ Add Trigger"
    2. Ensure the trigger is set to run `gmailUploadAndUpdate`.
    3. Since Alma Analytics reports are scheduled at various hours throughout the day, run the trigger as `Time-driven > Hour timer > Every hour`.
