@@ -138,5 +138,6 @@ function gmailUploadAndUpdate() {
   }
 
   uploadLabeledAttachments(folder, attachments);
+  Utilities.sleep(10000);
   createOrUpdateSheet(folder, attachments);
 }
