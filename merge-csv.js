@@ -99,7 +99,7 @@ function gmailMergeAndUpload() {
 
 function parseFileRecipients(files) {
   const recipients = {
-    'Unlimited Access eBooks list for Bookstore.zip': ['snackeru@umn.edu', 'hillx021@umn.edu'],
+    'Unlimited Access eBooks list for Bookstore.zip': ['snackeru@umn.edu', 'hillx021@umn.edu', 'cal@umn.edu', 'sarlt@umn.edu'],
     'Free Unlimited Access eBooks list for Bookstore.zip': ['snackeru@umn.edu', 'hillx021@umn.edu']
   };
 
