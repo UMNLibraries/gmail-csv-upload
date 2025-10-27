@@ -3,6 +3,7 @@ function gmailUploadAndUpdate() {
   const folder = DriveApp.getFolderById('');
   // Paste label name below
   const attachments = getLabeledAttachments('');
+  if (attachments.length == 0) return;
 
   // Formerly pulled all attachments, but now one at a time
   function getLabeledAttachments(labelName) {
