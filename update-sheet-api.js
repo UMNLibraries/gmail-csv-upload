@@ -4,20 +4,21 @@ function gmailUploadAndUpdate() {
   // Paste label name below
   const attachments = getLabeledAttachments('');
 
+  // Formerly pulled all attachments, but now one at a time
   function getLabeledAttachments(labelName) {
     const label = GmailApp.getUserLabelByName(labelName);
     if (label.getUnreadCount() == 0) return [];
     
-    const threads = label.getThreads(0, label.getUnreadCount());
+    // Get extra threads to account for possible nonadjacent unread messages
+    const threads = label.getThreads(0, label.getUnreadCount() + 20);
     const unreadThreads = threads.filter(thread => thread.isUnread());
     const attachments = [];
   
-    for (const thread of unreadThreads) {
-      const attachment = thread.getMessages()[0]
-        .getAttachments({ includeInlineImages: false })[0];
-      attachments.push(attachment);
-      thread.markRead();
-    }
+    const thread = unreadThreads.at(-1);
+    const attachment = thread.getMessages()[0]
+      .getAttachments({ includeInlineImages: false })[0];
+    attachments.push(attachment);
+    thread.markRead();
     
     console.log(`Retrieved attachments: ${attachments.map(a => a.getName())}`);
     return attachments;
@@ -138,6 +139,7 @@ function gmailUploadAndUpdate() {
   }
 
   uploadLabeledAttachments(folder, attachments);
-  Utilities.sleep(10000);
+  // Sleep to deal with occasional error when trying to find recently uploaded file
+  Utilities.sleep(60000);
   createOrUpdateSheet(folder, attachments);
 }

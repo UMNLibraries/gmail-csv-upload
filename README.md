@@ -56,7 +56,7 @@ This script uses the Google Sheets [Advanced Google service](https://developers.
 7. Enable a timed trigger to schedule executions of the script.
    1. Click on "Triggers" > "+ Add Trigger"
    2. Ensure the trigger is set to run `gmailUploadAndUpdate`.
-   3. Since Alma Analytics reports are scheduled at various hours throughout the day, run the trigger as `Time-driven > Hour timer > Every hour`.
+   3. Run the trigger as `Time-driven > Minutes timer > Every minute`. Several Alma Analytics reports are scheduled at various hours throughout the day, and this script deals with one upload at a time, so this allows for up to 60 reports to be scheduled during a specific hour.
    4. Set failure notification settings to your preference.
 
 ### Merge script
